@@ -1,87 +1,107 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Click to Show GIF</title>
-  <style>
-    :root {
-      --bg: #B53389;
-      --card: #16171d;
-      --text: #e8e8e8;
-      --muted: #a3a3a3;
-      --accent: #B53389;
-    }
-    * { box-sizing: border-box; }
+<meta charset="UTF-8">
+<title>💖 Болзох уу?</title>
+<style>
     body {
-      margin: 0; height: 100vh; display: grid; place-items: center;
-      background: radial-gradient(1200px 600px at 50% -10%, #1f2430, var(--bg));
-      color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: #ffe6f0;
+        margin: 0;
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
-    .card {
-      width: min(560px, 94vw); background: var(--card); border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,.35);
-      border: 1px solid rgba(255,255,255,.06);
+
+    h1 {
+        font-size: 40px;
     }
-    h1 { margin: 0 0 8px; font-size: 20px; }
-    p { margin: 0 0 16px; color: var(--muted); font-size: 14px; }
+
     .btn {
-      appearance: none; border: 0; outline: 0; cursor: pointer; user-select: none;
-      padding: 12px 16px; border-radius: 12px; font-size: 16px; font-weight: 600;
-      background: linear-gradient(180deg, #111827, #0f172a); color: #e5e7eb;
-      border: 1px solid rgba(255,255,255,.08); box-shadow: 0 6px 16px rgba(0,0,0,.25);
-      transition: transform .06s ease, box-shadow .2s ease, background .3s ease;
+        padding: 15px 30px;
+        font-size: 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin: 10px;
+        transition: 0.3s;
     }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(0,0,0,.35); }
-    .btn:active { transform: translateY(0); }
 
-    .gif-wrap { display: none; margin-top: 16px; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,.08); }
-    .gif-wrap.show { display: block; animation: fadeIn .25s ease-out; }
-    .gif-wrap img { display: block; width: 100%; height: auto; }
+    #yes {
+        background: #ff4da6;
+        color: white;
+    }
 
-    .row { display: flex; gap: 8px; align-items: center; }
-    .note { font-size: 12px; color: var(--muted); margin-top: 8px; }
+    #no {
+        background: #ccc;
+    }
 
-    @keyframes fadeIn { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
-  </style>
+    /* GIF контейнер */
+    .gif-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    img {
+        width: 200px;
+        display: none;
+    }
+
+</style>
 </head>
 <body>
-  <div class="card">
-    <h1>2024 оны top 10 кино</h1>
 
-    <div class="row">
-      <button class="btn" id="toggleBtn" type="button" onclick="toggleGif()">Танилцах</button>
-    </div>
+<h1>😏 Чи хөөрхөн үү?</h1>
 
-    <div id="gifWrap" class="gif-wrap" aria-hidden="true">
-      <img id="gifImg" alt="Funny GIF" loading="lazy" />
-    </div>
+<div>
+    <button id="yes" class="btn">Тийм ❤️</button>
+    <button id="no" class="btn">Үгүй 😢</button>
+</div>
 
-    <div class="note">Made by Toogii Линк: Зөвхөн дарахад бага зэрэг ачаална 😁.</div>
-  </div>
+<div class="gif-container">
+    <img id="gif" src="">
+</div>
 
-  <script>
-    const GIF_URL = "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExZTRrNGU2c2dqanoxczY2dHFkeXo2NGZ2OHIxc2FwMTVicnQ1NXM1aCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/I7p8K5EY9w9dC/giphy.gif";
-    let loaded = false;
+<h2 id="message"></h2>
 
-    function toggleGif() {
-      const wrap = document.getElementById('gifWrap');
-      const img = document.getElementById('gifImg');
-      const btn = document.getElementById('toggleBtn');
+<script>
+let noCount = 0;
 
-      const willShow = wrap.style.display !== 'block';
-      wrap.classList.toggle('show', willShow);
-      wrap.style.display = willShow ? 'block' : 'none';
+const yesBtn = document.getElementById("yes");
+const noBtn = document.getElementById("no");
+const gif = document.getElementById("gif");
+const message = document.getElementById("message");
 
-      if (willShow) {
-        if (!loaded) { img.src = GIF_URL; loaded = true; }
-        btn.textContent = 'Сансарагаас 🖕';
-        wrap.setAttribute('aria-hidden', 'false');
-      } else {
-        btn.textContent = 'Бэлэг харуулах';
-        wrap.setAttribute('aria-hidden', 'true');
-      }
-    }
-  </script>
+noBtn.addEventListener("click", () => {
+    noCount++;
+
+    let size = 20 + noCount * 10;
+    yesBtn.style.fontSize = size + "px";
+
+    gif.style.display = "block";
+    gif.src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzRlOHFrZmJmZDBrbmJqOWl1NGViNzlsNnNhdDJtcGVndzF5ZG94NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rCxogJBzaeZuU/giphy.gif";
+
+    message.innerText = "Дахиад боддоо... 😢";
+});
+
+yesBtn.addEventListener("click", () => {
+    gif.style.display = "block";
+    gif.src = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHppZnlhNXhkcHZncHp5eWhpdjdhOWVxM3FuaWs3eG9rZ2k4aDJiMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7y4Nc95399hsr24oYc/giphy.gif";
+
+    message.innerHTML = `
+        😍 Би мэдэж байсан! <br><br>
+        💖 Хамгийн хөөрхөн нь чи шүү!
+    `;
+
+    noBtn.style.display = "none";
+});
+</script>
+
 </body>
 </html>
-
