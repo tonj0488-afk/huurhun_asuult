@@ -32,7 +32,6 @@ h1{
     border-radius:12px;
     cursor:pointer;
     margin:10px;
-    transition:0.2s;
 }
 
 #yes{
@@ -90,14 +89,37 @@ h1{
 
 <div class="credit">Made by Toogii 💖</div>
 
-<script>
+<script type="module">
 
+// ================= FIREBASE IMPORT =================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
+
+// ================= YOUR FIREBASE CONFIG =================
+const firebaseConfig = {
+  apiKey: "AIzaSyD28Eh_WI2gC-9SZrt6cSkDtBkHm9hiuY",
+  authDomain: "huurhunasuult.firebaseapp.com",
+  projectId: "huurhunasuult",
+  storageBucket: "huurhunasuult.firebasestorage.app",
+  messagingSenderId: "889444107817",
+  appId: "1:889444107817:web:fd7822292695d9b264be38",
+  measurementId: "G-VV884NL11G"
+};
+
+// ================= INIT FIREBASE =================
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const analytics = getAnalytics(app);
+
+// ================= DOM =================
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const gif = document.getElementById("gif");
 const question = document.getElementById("question");
 
 let noCount = 0;
+let sentNo = false;
 
 const texts = [
     "🥺 Итгэлтэй байна уу?",
@@ -109,8 +131,20 @@ const texts = [
     "😂 Барьж чадвал дар даа..."
 ];
 
-// NO button move
-noBtn.addEventListener("mouseover", () => {
+// ================= FIREBASE FUNCTION =================
+async function sendAnswer(answer){
+    try{
+        await addDoc(collection(db, "answers"), {
+            answer: answer,
+            time: new Date()
+        });
+    } catch (e){
+        console.log("Firebase error:", e);
+    }
+}
+
+// ================= NO BUTTON MOVE =================
+noBtn.addEventListener("mouseover", async () => {
 
     noCount++;
 
@@ -122,7 +156,6 @@ noBtn.addEventListener("mouseover", () => {
 
     noBtn.style.left = Math.random() * maxX + "px";
     noBtn.style.top = Math.random() * maxY + "px";
-    noBtn.style.zIndex = "9999";
 
     yesBtn.style.fontSize = (20 + noCount * 4) + "px";
 
@@ -130,11 +163,18 @@ noBtn.addEventListener("mouseover", () => {
 
     gif.style.display = "block";
     gif.src = "https://media1.giphy.com/media/rCxogJBzaeZuU/giphy.gif";
+
+    // NO-г 1 удаа л хадгална
+    if(!sentNo){
+        sentNo = true;
+        await sendAnswer("no");
+    }
 });
 
+// ================= YES CLICK =================
+yesBtn.addEventListener("click", async () => {
 
-// YES click → new mini screen with YES/NO again
-yesBtn.addEventListener("click", () => {
+    await sendAnswer("yes");
 
     document.getElementById("app").innerHTML = `
         <h1>😍 Яаааай!</h1>
@@ -144,8 +184,7 @@ yesBtn.addEventListener("click", () => {
 
         <h2 style="color:#ff1493;">
             💖 Би мэдэж байсан! 💖<br>
-            Чи хамгийн хөөрхөн 😘<br><br>
-            Дараа уулзахдаа болзох уу? 🥰
+            Чи хамгийн хөөрхөн 😘
         </h2>
 
         <div>
@@ -154,12 +193,10 @@ yesBtn.addEventListener("click", () => {
         </div>
     `;
 
-    // YES again
     document.getElementById("againYes").addEventListener("click", () => {
-        alert("😏 Чи аль хэдийн тийм гэж хэлсэн шүү 💖");
+        alert("😏 Чи аль хэдийн YES дарсан 💖");
     });
 
-    // NO again → reset
     document.getElementById("againNo").addEventListener("click", () => {
         location.reload();
     });
