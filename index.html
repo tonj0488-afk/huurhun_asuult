@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💖 Надтай болзох уу?</title>
+<title>💖 Чи мэдэх үү?</title>
 
 <style>
 body{
@@ -31,8 +31,8 @@ h1{
     border:none;
     border-radius:12px;
     cursor:pointer;
-    transition:0.2s;
     margin:10px;
+    transition:0.2s;
 }
 
 #yes{
@@ -42,6 +42,7 @@ h1{
 
 #no{
     background:#d9d9d9;
+    position:fixed;
 }
 
 #gif{
@@ -51,11 +52,6 @@ h1{
     border-radius:15px;
 }
 
-#message{
-    color:#ff1493;
-    margin-top:15px;
-}
-
 .credit{
     position:fixed;
     bottom:10px;
@@ -63,7 +59,6 @@ h1{
     font-size:14px;
     color:#ff69b4;
     opacity:0.7;
-    z-index:9999;
 }
 
 .heart{
@@ -74,31 +69,25 @@ h1{
 }
 
 @keyframes floatUp{
-    from{
-        transform:translateY(0);
-        opacity:1;
-    }
-    to{
-        transform:translateY(-250px);
-        opacity:0;
-    }
+    from{transform:translateY(0); opacity:1;}
+    to{transform:translateY(-250px); opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<h1 id="question">🥰 Чи мэдэх үү?</h1>
+<div id="app">
+    <h1 id="question">🥰 Toogii чамайг хөөрхөн гэж боддог уу?</h1>
 
-<div>
-    <button id="yes" class="btn">Тийм ❤️</button>
-    <button id="no" class="btn">Үгүй 😢</button>
+    <div id="buttons">
+        <button id="yes" class="btn">Тийм ❤️</button>
+        <button id="no" class="btn">Үгүй 😢</button>
+    </div>
+
+    <img id="gif">
 </div>
 
-<img id="gif" src="">
-<h2 id="message"></h2>
-
-<!-- ✅ MADE BY (1 ширхэг зөв байрлалтай) -->
 <div class="credit">Made by Toogii 💖</div>
 
 <script>
@@ -106,7 +95,6 @@ h1{
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const gif = document.getElementById("gif");
-const message = document.getElementById("message");
 const question = document.getElementById("question");
 
 let noCount = 0;
@@ -121,10 +109,8 @@ const texts = [
     "😂 Барьж чадвал дар даа..."
 ];
 
-// NO move
-noBtn.addEventListener("mouseover", moveNoButton);
-
-function moveNoButton(){
+// NO button move
+noBtn.addEventListener("mouseover", () => {
 
     noCount++;
 
@@ -134,54 +120,62 @@ function moveNoButton(){
     const maxX = window.innerWidth - btnWidth - 20;
     const maxY = window.innerHeight - btnHeight - 20;
 
-    noBtn.style.position = "fixed";
     noBtn.style.left = Math.random() * maxX + "px";
     noBtn.style.top = Math.random() * maxY + "px";
     noBtn.style.zIndex = "9999";
 
-    yesBtn.style.fontSize = (20 + noCount * 5) + "px";
+    yesBtn.style.fontSize = (20 + noCount * 4) + "px";
 
-    question.innerText =
-        texts[Math.min(noCount - 1, texts.length - 1)];
+    question.innerText = texts[Math.min(noCount - 1, texts.length - 1)];
 
     gif.style.display = "block";
-    gif.src =
-    "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzRlOHFrZmJmZDBrbmJqOWl1NGViNzlsNnNhdDJtcGVndzF5ZG94NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rCxogJBzaeZuU/giphy.gif";
-}
+    gif.src = "https://media1.giphy.com/media/rCxogJBzaeZuU/giphy.gif";
+});
 
-// YES click
+
+// YES click → new mini screen with YES/NO again
 yesBtn.addEventListener("click", () => {
 
-    document.body.innerHTML = `
-        <h1 style="font-size:60px;color:#ff1493;">
-            😍 Яаааай!
-        </h1>
+    document.getElementById("app").innerHTML = `
+        <h1>😍 Яаааай!</h1>
 
-        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHppZnlhNXhkcHZncHp5eWhpdjdhOWVxM3FuaWs3eG9rZ2k4aDJiMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7y4Nc95399hsr24oYc/giphy.gif"
-        style="display:block;width:300px;border-radius:20px;">
+        <img src="https://media.giphy.com/media/7y4Nc95399hsr24oYc/giphy.gif"
+        style="width:250px;border-radius:20px;">
 
-        <h2 style="color:#ff1493;font-size:36px;">
-            💖 Би мэдэж байсан! 💖<br><br>
-            Хамгийн хөөрхөн нь чи шүү 😘
+        <h2 style="color:#ff1493;">
+            💖 Би мэдэж байсан! 💖<br>
+            Чи хамгийн хөөрхөн 😘<br><br>
+            Дараа уулзахдаа болзох уу? 🥰
         </h2>
 
-        <div class="credit">Made by Toogii 💖</div>
+        <div>
+            <button id="againYes" class="btn" style="background:#ff4da6;color:white;">Тийм ❤️</button>
+            <button id="againNo" class="btn">Үгүй 😢</button>
+        </div>
     `;
 
-    setInterval(() => {
+    // YES again
+    document.getElementById("againYes").addEventListener("click", () => {
+        alert("😏 Чи аль хэдийн тийм гэж хэлсэн шүү 💖");
+    });
 
+    // NO again → reset
+    document.getElementById("againNo").addEventListener("click", () => {
+        location.reload();
+    });
+
+    // hearts animation
+    setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
         heart.innerHTML = "❤️";
-
         heart.style.left = Math.random() * window.innerWidth + "px";
         heart.style.top = window.innerHeight + "px";
 
         document.body.appendChild(heart);
 
         setTimeout(() => heart.remove(), 2000);
-
-    }, 120);
+    }, 150);
 });
 
 </script>
