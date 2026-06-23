@@ -2,105 +2,188 @@
 <html lang="mn">
 <head>
 <meta charset="UTF-8">
-<title>💖 Болзох уу?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖 Надтай болзох уу?</title>
+
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        background: #ffe6f0;
-        margin: 0;
-        height: 100vh;
+body{
+    margin:0;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ffd6e7,#fff0f6);
+    font-family:Arial,sans-serif;
+    text-align:center;
+}
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
+h1{
+    color:#ff1493;
+    margin-bottom:25px;
+}
+
+.btn{
+    padding:15px 30px;
+    font-size:20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.2s;
+    margin:10px;
+}
+
+#yes{
+    background:#ff4da6;
+    color:white;
+}
+
+#no{
+    background:#d9d9d9;
+}
+
+#gif{
+    width:250px;
+    margin-top:20px;
+    display:none;
+    border-radius:15px;
+}
+
+#message{
+    color:#ff1493;
+    margin-top:15px;
+}
+
+.credit{
+    position:fixed;
+    bottom:10px;
+    right:15px;
+    font-size:14px;
+    color:#ff69b4;
+    opacity:0.7;
+    z-index:9999;
+}
+
+.heart{
+    position:fixed;
+    font-size:30px;
+    pointer-events:none;
+    animation:floatUp 2s linear forwards;
+}
+
+@keyframes floatUp{
+    from{
+        transform:translateY(0);
+        opacity:1;
     }
-
-    h1 {
-        font-size: 40px;
+    to{
+        transform:translateY(-250px);
+        opacity:0;
     }
-
-    .btn {
-        padding: 15px 30px;
-        font-size: 20px;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        margin: 10px;
-        transition: 0.3s;
-    }
-
-    #yes {
-        background: #ff4da6;
-        color: white;
-    }
-
-    #no {
-        background: #ccc;
-    }
-
-    /* GIF контейнер */
-    .gif-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    img {
-        width: 200px;
-        display: none;
-    }
-
+}
 </style>
 </head>
+
 <body>
 
-<h1>😏 Чи хөөрхөн үү?</h1>
+<h1 id="question">🥰 Чи мэдэх үү?</h1>
 
 <div>
     <button id="yes" class="btn">Тийм ❤️</button>
     <button id="no" class="btn">Үгүй 😢</button>
 </div>
 
-<div class="gif-container">
-    <img id="gif" src="">
-</div>
-
+<img id="gif" src="">
 <h2 id="message"></h2>
 
+<!-- ✅ MADE BY (1 ширхэг зөв байрлалтай) -->
+<div class="credit">Made by Toogii 💖</div>
+
 <script>
-let noCount = 0;
 
 const yesBtn = document.getElementById("yes");
 const noBtn = document.getElementById("no");
 const gif = document.getElementById("gif");
 const message = document.getElementById("message");
+const question = document.getElementById("question");
 
-noBtn.addEventListener("click", () => {
+let noCount = 0;
+
+const texts = [
+    "🥺 Итгэлтэй байна уу?",
+    "😭 Дахиад боддоо...",
+    "💔 Үнэхээр үү?",
+    "😢 Би гомдчихлоо...",
+    "🥹 За битгий дээ...",
+    "😏 Тийм дээр дараач...",
+    "😂 Барьж чадвал дар даа..."
+];
+
+// NO move
+noBtn.addEventListener("mouseover", moveNoButton);
+
+function moveNoButton(){
+
     noCount++;
 
-    let size = 20 + noCount * 10;
-    yesBtn.style.fontSize = size + "px";
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+
+    const maxX = window.innerWidth - btnWidth - 20;
+    const maxY = window.innerHeight - btnHeight - 20;
+
+    noBtn.style.position = "fixed";
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top = Math.random() * maxY + "px";
+    noBtn.style.zIndex = "9999";
+
+    yesBtn.style.fontSize = (20 + noCount * 5) + "px";
+
+    question.innerText =
+        texts[Math.min(noCount - 1, texts.length - 1)];
 
     gif.style.display = "block";
-    gif.src = "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzRlOHFrZmJmZDBrbmJqOWl1NGViNzlsNnNhdDJtcGVndzF5ZG94NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rCxogJBzaeZuU/giphy.gif";
+    gif.src =
+    "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzRlOHFrZmJmZDBrbmJqOWl1NGViNzlsNnNhdDJtcGVndzF5ZG94NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rCxogJBzaeZuU/giphy.gif";
+}
 
-    message.innerText = "Дахиад боддоо... 😢";
-});
-
+// YES click
 yesBtn.addEventListener("click", () => {
-    gif.style.display = "block";
-    gif.src = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHppZnlhNXhkcHZncHp5eWhpdjdhOWVxM3FuaWs3eG9rZ2k4aDJiMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7y4Nc95399hsr24oYc/giphy.gif";
 
-    message.innerHTML = `
-        😍 Би мэдэж байсан! <br><br>
-        💖 Хамгийн хөөрхөн нь чи шүү!
+    document.body.innerHTML = `
+        <h1 style="font-size:60px;color:#ff1493;">
+            😍 Яаааай!
+        </h1>
+
+        <img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbHppZnlhNXhkcHZncHp5eWhpdjdhOWVxM3FuaWs3eG9rZ2k4aDJiMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7y4Nc95399hsr24oYc/giphy.gif"
+        style="display:block;width:300px;border-radius:20px;">
+
+        <h2 style="color:#ff1493;font-size:36px;">
+            💖 Би мэдэж байсан! 💖<br><br>
+            Хамгийн хөөрхөн нь чи шүү 😘
+        </h2>
+
+        <div class="credit">Made by Toogii 💖</div>
     `;
 
-    noBtn.style.display = "none";
+    setInterval(() => {
+
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = "❤️";
+
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = window.innerHeight + "px";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 2000);
+
+    }, 120);
 });
+
 </script>
 
 </body>
